@@ -16,20 +16,7 @@ function App() {
   return (
     <div>
       <h1>stock'd</h1>
-      {weather ? (
-        <div>
-          <h2>Current Weather</h2>
-          <p>Temperature: {weather.current.temperature_2m}°F</p>
-          <p>Apparent Temperature: {weather.current.apparent_temperature}°F</p>
-          <p>Relative Humidity: {weather.current.relative_humidity_2m}%</p>
-          <p>
-            Precipitation:{" "}
-            {weather.current.precipitation} inches
-          </p>
-        </div>
-      ) : (
-        <p>Loading weather data...</p>
-      )}
+      <p>your handy pantry tracker app</p>
     </div>
   );
 }
