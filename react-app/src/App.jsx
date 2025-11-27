@@ -19,6 +19,17 @@ function App() {
       <p>your handy pantry tracker app!</p>
       <button>add your first item</button>
       
+      <section id = "pantry">
+        <div id = "shelf"> {/* holds all items */}
+
+        </div>
+        <div id = "actions"> {/* for deleting items, finding facts, etc */}
+
+        </div>
+        <div id = "facts"> {/* uses api for nutrition facts*/}
+
+        </div>
+      </section>
 
 
 
