@@ -110,9 +110,87 @@ if (showForm) {
             ))}
           </ul>
         </div>
-        <div id = "actions"> {/* for deleting items, finding facts, etc */}
-          <h3>what would you like to do?</h3>
-        </div>
+<div id="actions">
+  <h3>what would you like to do?</h3>
+
+  {selectedItem ? (
+    <div className="action-panel">
+
+
+      <div className="quantity-editor">
+        <p>edit quantity</p>
+        <button
+          onClick={() => {
+            const updated = items.map((i) =>
+              i.id === selectedItem.id
+                ? { ...i, quantity: Number(i.quantity) - 1 }
+                : i
+            );
+            setItems(updated);
+
+            // update selectedItem reference
+            setSelectedItem({
+              ...selectedItem,
+              quantity: Number(selectedItem.quantity) - 1,
+            });
+          }}
+        >
+          –
+        </button>
+
+        <input
+          type="number"
+          value={selectedItem.quantity}
+          onChange={(e) => {
+            const updated = items.map((i) =>
+              i.id === selectedItem.id
+                ? { ...i, quantity: e.target.value }
+                : i
+            );
+            setItems(updated);
+
+            setSelectedItem({
+              ...selectedItem,
+              quantity: e.target.value,
+            });
+          }}
+          style={{ width: "60px", textAlign: "center" }}
+        />
+
+        <button
+          onClick={() => {
+            const updated = items.map((i) =>
+              i.id === selectedItem.id
+                ? { ...i, quantity: Number(i.quantity) + 1 }
+                : i
+            );
+            setItems(updated);
+
+            setSelectedItem({
+              ...selectedItem,
+              quantity: Number(selectedItem.quantity) + 1,
+            });
+          }}
+        >
+          +
+        </button>
+      </div>
+
+      <button
+        onClick={() => {
+          setItems(items.filter((i) => i.id !== selectedItem.id));
+          setSelectedItem(null);
+        }}
+      >
+        delete this item
+      </button>
+    </div>
+  ) : (
+    <p className="no-selection">select an item from the shelf</p>
+  )}
+</div>
+
+
         <div id = "facts"> {/* uses api for nutrition facts*/}
           <h3>loading...</h3>
         </div>
