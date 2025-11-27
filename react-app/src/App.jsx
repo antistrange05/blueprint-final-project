@@ -21,13 +21,13 @@ function App() {
       
       <section id = "pantry">
         <div id = "shelf"> {/* holds all items */}
-
+          <h3>my shelf</h3>
         </div>
         <div id = "actions"> {/* for deleting items, finding facts, etc */}
-
+          <h3>what would you like to do?</h3>
         </div>
         <div id = "facts"> {/* uses api for nutrition facts*/}
-
+          <h3>loading...</h3>
         </div>
       </section>
 
