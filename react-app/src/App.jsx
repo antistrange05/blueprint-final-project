@@ -9,6 +9,7 @@ function App() {
   const [quantity, setQuantity] = useState("");
   const [category, setCategory] = useState("");
   const [items, setItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
     fetch(
@@ -18,6 +19,10 @@ function App() {
       .then((data) => setWeather(data))
       .catch((error) => console.error("Error fetching weather data:", error));
   }, [setWeather]);
+
+  const handleSelect = (item) => {
+    setSelectedItem(item);
+  }
 
   const handleSubmit = () => {
 
@@ -94,7 +99,12 @@ if (showForm) {
           <h3>my shelf</h3>
           <ul>
             {items.map((item) => (
-              <li key = {item.id}>
+              <li 
+                key = {item.id}
+                onClick = {() => handleSelect(item)}
+                className = {selectedItem?.id === item.id ? "selected" : ""}
+                style = {{ cursor : "pointer"}}
+                >
                   <strong>{item.name}</strong> - Quantity: {item.quantity} - Category: {item.category}
               </li>
             ))}
