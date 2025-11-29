@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const [weather, setWeather] = useState(null);
 
   const [showForm, setShowForm] = useState(false);
   const [itemName, setItemName] = useState("");
@@ -10,15 +9,12 @@ function App() {
   const [category, setCategory] = useState("");
   const [items, setItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [nutritionData, setNutritionData] = useState(null);
+  const [loadingNutrition, setLoadingNutrition] = useState(false);
 
-  useEffect(() => {
-    fetch(
-      "https://api.open-meteo.com/v1/forecast?latitude=40.4862&longitude=-74.4518&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation&timezone=America%2FNew_York&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch"
-    )
-      .then((response) => response.json())
-      .then((data) => setWeather(data))
-      .catch((error) => console.error("Error fetching weather data:", error));
-  }, [setWeather]);
+  const API_KEY = 'HIE5hqcouLjbEoWB5NRuCY3C2HgM50ZvnhcXVBpA';
+
+  
 
   const handleSelect = (item) => {
     setSelectedItem(item);
