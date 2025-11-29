@@ -38,6 +38,52 @@ function App() {
     setShowForm(false);
   };
 
+   const fetchNutritionData = async (foodName) => {
+    setLoadingNutrition(true);
+    setNutritionData(null);
+    
+    try {
+      const searchResponse = await fetch(
+        `https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(foodName)}&api_key=${API_KEY}`
+      );
+      const searchData = await searchResponse.json();
+      
+      if (searchData.foods && searchData.foods.length > 0) {
+        const food = searchData.foods[0];
+        
+        const nutrients = {
+          calories: food.foodNutrients.find(n => n.nutrientName === "Energy")?.value || "N/A",
+          protein: food.foodNutrients.find(n => n.nutrientName === "Protein")?.value || "N/A",
+          carbs: food.foodNutrients.find(n => n.nutrientName === "Carbohydrate, by difference")?.value || "N/A",
+          fat: food.foodNutrients.find(n => n.nutrientName === "Total lipid (fat)")?.value || "N/A",
+          fiber: food.foodNutrients.find(n => n.nutrientName === "Fiber, total dietary")?.value || "N/A",
+        };
+        
+        setNutritionData({
+          foodName: food.description,
+          nutrients: nutrients,
+          servingSize: food.servingSize || 100,
+          servingUnit: food.servingSizeUnit || "g"
+        });
+      } else {
+        setNutritionData({ error: "No nutritional data found for this item" });
+      }
+    } catch (error) {
+      console.error("Error fetching nutrition data:", error);
+      setNutritionData({ error: "Failed to fetch nutritional data" });
+    } finally {
+      setLoadingNutrition(false);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedItem) {
+      fetchNutritionData(selectedItem.name);
+    } else {
+      setNutritionData(null);
+    }
+  }, [selectedItem]);
+
 if (showForm) {
     return (
       <div className="form-page">
@@ -187,11 +233,44 @@ if (showForm) {
 </div>
 
 
-        <div id = "facts"> {/* uses api for nutrition facts*/}
-          <h3>loading...</h3>
+        <div id="facts">
+          <h3>nutritional information</h3>
+          {!selectedItem ? (
+            <p>Select an item to view nutritional facts</p>
+          ) : loadingNutrition ? (
+            <p>Loading nutrition data...</p>
+          ) : nutritionData?.error ? (
+            <div className="item-info">
+              <p>{nutritionData.error}</p>
+            </div>
+          ) : nutritionData ? (
+            <div className="item-info nutrition-facts">
+              <div className="nutrient-list">
+                <div className="nutrient-item">
+                  <span className="nutrient-name">Calories: </span>
+                  <span className="nutrient-value">{nutritionData.nutrients.calories} kcal</span>
+                </div>
+                <div className="nutrient-item">
+                  <span className="nutrient-name">Protein: </span>
+                  <span className="nutrient-value">{nutritionData.nutrients.protein} g</span>
+                </div>
+                <div className="nutrient-item">
+                  <span className="nutrient-name">Carbohydrates: </span>
+                  <span className="nutrient-value">{nutritionData.nutrients.carbs} g</span>
+                </div>
+                <div className="nutrient-item">
+                  <span className="nutrient-name">Fat: </span>
+                  <span className="nutrient-value">{nutritionData.nutrients.fat} g</span>
+                </div>
+                <div className="nutrient-item">
+                  <span className="nutrient-name">Fiber: </span>
+                  <span className="nutrient-value">{nutritionData.nutrients.fiber} g</span>
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
       </section>
-
     </div>
   );
 }
