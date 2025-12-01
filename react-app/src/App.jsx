@@ -11,6 +11,9 @@ function App() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [nutritionData, setNutritionData] = useState(null);
   const [loadingNutrition, setLoadingNutrition] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(false);
+  const [newCategory, setNewCategory] = useState("");
+
 
   const API_KEY = 'HIE5hqcouLjbEoWB5NRuCY3C2HgM50ZvnhcXVBpA';
 
@@ -226,6 +229,44 @@ if (showForm) {
       >
         delete this item
       </button>
+
+      <button
+        onClick = {() => {
+          setEditingCategory(true);
+          setNewCategory(selectedItem.category);
+        }}> 
+        change category
+        </button>
+
+        {editingCategory && (
+          <div className = "edit-category-form">
+            <input
+              type = "text"
+              value = {newCategory}
+              onChange = {(e) => setNewCategory(e.target.value)}
+              placeholder = "new cateogry"
+            />
+
+            <div className = "edit-buttons">
+              <button
+                onClick ={() => {
+                  const updated = items.map((i) => i.id === selectedItem.id ? {...i, category: newCategory} : i
+                );
+                setItems(updated);
+
+                setSelectedItems({...selectedItem, category: newCategory,});
+
+                setEditingCategory(false);
+                }}
+              >
+                save
+              </button>
+
+              <button onClick={() => setEditingCategory(false)}>cancel</button>
+              </div>
+              </div>
+        )}
+
     </div>
   ) : (
     <p className="no-selection">select an item from the shelf</p>
