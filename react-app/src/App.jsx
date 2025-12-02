@@ -8,6 +8,7 @@ function App() {
   const [quantity, setQuantity] = useState("");
   const [category, setCategory] = useState("");
   const [items, setItems] = useState([]);
+  const [sortOption, setSortOption] = useState("name");
   const [selectedItem, setSelectedItem] = useState(null);
   const [nutritionData, setNutritionData] = useState(null);
   const [loadingNutrition, setLoadingNutrition] = useState(false);
@@ -112,15 +113,22 @@ if (showForm) {
             onChange = {(e) => setQuantity(e.target.value)}
           />
         </div>
-
-        <div className = "form-group">
+        
+      <div className = "form-group">
           <label htmlFor = "category">category: </label>
-          <input
-            type = "text"
+          <select
             id = "category"
             value = {category}
             onChange = {(e) => setCategory(e.target.value)}
-          />
+          >
+            <option value="">Select category</option>
+            <option value="Dairy">Dairy</option>
+            <option value="Snacks">Snacks</option>
+            <option value="Produce">Produce</option>
+            <option value="Grains">Grains</option>
+            <option value="Frozen">Frozen</option>
+            <option value="Other">Other</option>
+          </select>
         </div>
 
         <div className = "form-buttons">
@@ -132,7 +140,13 @@ if (showForm) {
     );
 }
 
-
+const sortedItems = [...items].sort((a, b) => {
+  if (sortOption === "name") return a.name.localeCompare(b.name);
+  if (sortOption === "quantity") return Number(a.quantity) - Number(b.quantity);
+  if (sortOption === "category") return a.category.localeCompare(b.category);
+  return 0;
+});
+  
   return (
     <div>
       <h1>stock'd</h1>
@@ -142,8 +156,14 @@ if (showForm) {
       <section id = "pantry">
         <div id = "shelf"> {/* holds all items */}
           <h3>my shelf</h3>
+          <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+            <option value="name">Sort by Name (A–Z)</option>
+            <option value="quantity">Sort by Quantity</option>
+            <option value="category">Sort by Category</option>
+          </select>
+          
           <ul>
-            {items.map((item) => (
+            {sortItems.map((item) => (
               <li 
                 key = {item.id}
                 onClick = {() => handleSelect(item)}
@@ -250,11 +270,12 @@ if (showForm) {
             <div className = "edit-buttons">
               <button
                 onClick ={() => {
-                  const updated = items.map((i) => i.id === selectedItem.id ? {...i, category: newCategory} : i
+                  const updated = items.map((i) => 
+                    i.id === selectedItem.id ? {...i, category: newCategory} : i
                 );
                 setItems(updated);
 
-                setSelectedItems({...selectedItem, category: newCategory,});
+                setSelectedItem({...selectedItem, category: newCategory,});
 
                 setEditingCategory(false);
                 }}
