@@ -163,7 +163,7 @@ const sortedItems = [...items].sort((a, b) => {
           </select>
           
           <ul>
-            {sortItems.map((item) => (
+            {sortedItems.map((item) => (
               <li 
                 key = {item.id}
                 onClick = {() => handleSelect(item)}
@@ -259,34 +259,45 @@ const sortedItems = [...items].sort((a, b) => {
         </button>
 
         {editingCategory && (
-          <div className = "edit-category-form">
-            <input
-              type = "text"
-              value = {newCategory}
-              onChange = {(e) => setNewCategory(e.target.value)}
-              placeholder = "new cateogry"
-            />
+  <div className="edit-category-form">
+    <select
+      value={newCategory}
+      onChange={(e) => setNewCategory(e.target.value)}
+    >
+      <option value="Dairy">Dairy</option>
+      <option value="Snacks">Snacks</option>
+      <option value="Produce">Produce</option>
+      <option value="Grains">Grains</option>
+      <option value="Frozen">Frozen</option>
+      <option value="Other">Other</option>
+    </select>
 
-            <div className = "edit-buttons">
-              <button
-                onClick ={() => {
-                  const updated = items.map((i) => 
-                    i.id === selectedItem.id ? {...i, category: newCategory} : i
-                );
-                setItems(updated);
+    <div className="edit-buttons">
+      <button
+        onClick={() => {
+          const updated = items.map((i) =>
+            i.id === selectedItem.id
+              ? { ...i, category: newCategory }
+              : i
+          );
 
-                setSelectedItem({...selectedItem, category: newCategory,});
+          setItems(updated);
+          setSelectedItem({
+            ...selectedItem,
+            category: newCategory,
+          });
 
-                setEditingCategory(false);
-                }}
-              >
-                save
-              </button>
+          setEditingCategory(false);
+        }}
+      >
+        save
+      </button>
 
-              <button onClick={() => setEditingCategory(false)}>cancel</button>
-              </div>
-              </div>
-        )}
+      <button onClick={() => setEditingCategory(false)}>cancel</button>
+    </div>
+  </div>
+)}
+
 
     </div>
   ) : (
